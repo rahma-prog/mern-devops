@@ -11,45 +11,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout du dépôt
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v3
 
-      # 2. Setup Docker Buildx
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-      # 3. Login Docker Hub
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # 4. Build Backend Image
-      - name: Build Backend Image
-        run: docker build -t rahma33986/rental-backend:latest ./backend
+    - name: Build Backend Image
+      run: docker build -t rahma33986/rental-backend:latest ./backend
 
-      # 5. Build Frontend Image
-      - name: Build Frontend Image
-        run: docker build -t rahma33986/rental-frontend:latest ./frontend
+    - name: Build Frontend Image
+      run: docker build -t rahma33986/rental-frontend:latest ./frontend
 
-      # 6. Scan Backend Image
-      - name: Scan Backend Image
-        uses: aquasecurity/trivy-action@v1
-        with:
-          image-ref: rahma33986/rental-backend:latest
+    - name: Scan Backend Image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: rahma33986/rental-backend:latest
 
-      # 7. Scan Frontend Image
-      - name: Scan Frontend Image
-        uses: aquasecurity/trivy-action@v1
-        with:
-          image-ref: rahma33986/rental-frontend:latest
+    - name: Scan Frontend Image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: rahma33986/rental-frontend:latest
 
-      # 8. Push Backend Image
-      - name: Push Backend Image
-        run: docker push rahma33986/rental-backend:latest
+    - name: Push Backend Image
+      run: docker push rahma33986/rental-backend:latest
 
-      # 9. Push Frontend Image
-      - name: Push Frontend Image
-        run: docker push rahma33986/rental-frontend:latest
+    - name: Push Frontend Image
+      run: docker push rahma33986/rental-frontend:latest
